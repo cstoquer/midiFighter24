@@ -1,0 +1,78 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title> 7 segments </title>
+<style type="text/css">
+	div{
+		font-size : 12px;
+		font-family : Arial;
+	}
+
+	.display {
+		margin-left: 50px;
+		color: #F00;
+		font-size: 30px;
+		text-shadow: 0 0 8px #000;
+	}
+
+	.digit {
+		margin-left: 80px;
+		-webkit-transform: skew(-10deg, 0);
+		transform: skew(-10deg, 0);
+	}
+
+	.segment {
+		position: absolute;
+		border-radius: 20px;
+	}
+</style>
+</head>
+<body>
+
+<div id="display" class="display">0</div>
+<div id="digit"   class="digit"></div>
+
+<script>
+
+var segmentData = [
+	{ x: 1, y: 0, w: 3, h: 1 },
+	{ x: 0, y: 1, w: 1, h: 3 },
+	{ x: 4, y: 1, w: 1, h: 3 },
+	{ x: 1, y: 4, w: 3, h: 1 },
+	{ x: 0, y: 5, w: 1, h: 3 },
+	{ x: 4, y: 5, w: 1, h: 3 },
+	{ x: 1, y: 8, w: 3, h: 1 },
+	{ x: 6, y: 8, w: 1, h: 1 }
+];
+
+var SIZE   = 30;
+var BORDER = 5;
+var value  = 0;
+
+var display = document.getElementById("display");
+var digit   = document.getElementById("digit");
+
+function tap(e) {
+	e.preventDefault();
+	this.state = !this.state;
+	this.style.backgroundColor = this.state ? '#F00' : '#CCC';
+	value += this.state ? this.value : -this.value;
+	display.textContent = value;
+}
+
+for (var i = 0; i < segmentData.length; i++) {
+	var data = segmentData[i];
+	var segment = document.createElement('div');
+	digit.appendChild(segment);
+	segment.className = 'segment';
+	segment.style.left   = data.x * SIZE - BORDER + 'px';
+	segment.style.top    = data.y * SIZE - BORDER + 'px';
+	segment.style.width  = data.w * SIZE + BORDER * 2 + 'px';
+	segment.style.height = data.h * SIZE + BORDER * 2  + 'px';
+	segment.style.backgroundColor = '#CCC';
+	segment.value = 1 << i;
+	segment.state = false;
+	segment.addEventListener('mousedown', tap);
+}
+
+</script>
+</body>
+</html>

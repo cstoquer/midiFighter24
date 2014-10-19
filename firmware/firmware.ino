@@ -4,12 +4,11 @@
 #define PULSE_WIDTH_USEC 5
 #define DEBOUNCE_TRIGGER 8
 
-
-int   LOAD  = 2;
-int   CLOCK = 3;
-int   READ1 = 4;
-int   READ2 = 5;
-int   READ3 = 6;
+#define LOAD  2
+#define CLOCK 3
+#define READ1 4
+#define READ2 5
+#define READ3 6
 
 int   pinStates[24];  // state values of all 24 pins
 int   changed[24];    // a list of button with changed state in the current loop
@@ -18,9 +17,9 @@ bool  debouncing[24]; // pins currently in debounce mode
 
 DualDigitDisplay display;
 
-int pinToPadMap[24] = {
-	17,  9, 1, 16,  8, 0, 20, 12, 4, 21, 13, 5,
-	22, 14, 6, 23, 15, 7, 19, 11, 3, 18, 10, 2
+const int pinToPadMap[24] = {
+	2,  50, 51, 3,  52, 53, 6, 55, 56, 7, 58, 59,
+	0, 60, 61, 1, 63, 64, 4, 66, 67, 5, 69, 70
 };
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -126,7 +125,7 @@ void loop() {
 			if (pinStates[changed[i]]) {
 				int note = pinToPadMap[changed[i]] + 36;
 				MIDI.sendNoteOn(note, 120, 1);
-				display.displayNote(note);
+				display.displayNumber(pinToPadMap[changed[i]], 0, 0);
 			} else {
 				MIDI.sendNoteOff(pinToPadMap[changed[i]] + 36, 0, 1);
 			}

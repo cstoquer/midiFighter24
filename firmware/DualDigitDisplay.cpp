@@ -3,16 +3,15 @@
 #include "DualDigitDisplay.h"
 
 
-#define DOT 128
-
-byte NUMBERS[10] = {119, 36, 93, 109, 46, 107, 123, 37, 127, 111};
-byte LETTERS[7]  = {63, 122, 83, 124, 91, 27, 115};
-byte NOTES[12]   = {83, 83, 124, 124, 91, 27, 27, 115, 115, 63, 63, 122};
-byte SHARP[12]   = {0, DOT, 0, DOT, 0, 0, DOT, 0, DOT, 0, DOT, 0};
+const byte NUMBERS[10] = {119, 36, 93, 109, 46, 107, 123, 37, 127, 111};
+const byte LETTERS[26] = {63, 122, 83, 124, 91, 27, 115, 62, 18, 116, 59, 82, 55, 56, 120, 31, 47, 24, 107, 90, 118, 112, 73, 54, 110, 85};
+const byte NOTES[12]   = {83, 83, 124, 124, 91, 27, 27, 115, 115, 63, 63, 122};
+const byte SHARP[12]   = {0, DOT, 0, DOT, 0, 0, DOT, 0, DOT, 0, DOT, 0};
 
 
 DualDigitDisplay::DualDigitDisplay() {
-	// nop
+	timer = BLINK_DURATION;
+	blink = true;
 }
 
 
@@ -36,12 +35,13 @@ void DualDigitDisplay::display(int digitA, int digitB) {
 	shiftOut(DISPLAY_DATA, DISPLAY_CLOCK, MSBFIRST, digitA);
 	//take the latch pin high so the LEDs will light up:
 	digitalWrite(DISPLAY_LATCH, HIGH);
+	timer = CLEAR_DURATION;
 }
 
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
-void DualDigitDisplay::displayNumber(int number, int decimal, byte quote) {
+void DualDigitDisplay::displayNumber(int number, int decimal, int quote) {
 	display(
 		NUMBERS[(number % 100) / 10] | decimal << 7,
 		NUMBERS[number % 10]         | quote   << 7

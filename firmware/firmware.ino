@@ -2,6 +2,7 @@
 #include "DualDigitDisplay.h"
 
 #define PULSE_WIDTH_USEC 5
+#define ANALOG_READ_RATE 50
 #define DEBOUNCE_TRIGGER 8
 
 #define LOAD  2
@@ -10,10 +11,23 @@
 #define READ2 5
 #define READ3 6
 
-int   pinStates[24];  // state values of all 24 pins
-int   changed[24];    // a list of button with changed state in the current loop
-int   debounce[24];   // debounce counter values of all 24 pins
-bool  debouncing[24]; // pins currently in debounce mode
+#define FOOT_SWITCH 7
+#define SHIFT_A 12
+#define SHIFT_B 11
+
+#define SHIFT_A_BIT 24
+#define SHIFT_B_BIT 25
+
+int   pinStates[26];  // state values of all 24 button pins
+int   changed[26];    // a list of button with changed state in the current loop
+int   debounce[26];   // debounce counter values of all 24 pins
+bool  debouncing[26]; // pins currently in debounce mode
+
+long  footControlRead;    // analog read value of connected foot controller
+long  footControlValue;   // analog current value of connected foot controller
+int   footTimer;
+
+int   selectedOctave;
 
 DualDigitDisplay display;
 
@@ -25,11 +39,13 @@ const int pinToPadMap[24] = {
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
 void setup() {
-	pinMode(LOAD,  OUTPUT);
-	pinMode(CLOCK, OUTPUT);
-	pinMode(READ1, INPUT);
-	pinMode(READ2, INPUT);
-	pinMode(READ3, INPUT);
+	pinMode(LOAD,        OUTPUT);
+	pinMode(CLOCK,       OUTPUT);
+	pinMode(READ1,       INPUT);
+	pinMode(READ2,       INPUT);
+	pinMode(FOOT_SWITCH, INPUT);
+	pinMode(SHIFT_A,     INPUT);
+	pinMode(SHIFT_B,     INPUT);
 
 	for (int i = 0; i < 24; ++i) {
 		pinStates[i]  = 0;
@@ -37,6 +53,12 @@ void setup() {
 		debounce[i]   = 0;
 		debouncing[i] = false;
 	}
+
+	footControlRead = 0;
+	footControlValue = 0;
+	footTimer = ANALOG_READ_RATE;
+
+	selectedOctave = 1;
 
 	display.setup();
 	MIDI.begin();
@@ -51,7 +73,10 @@ int readButtons() {
 	//-------------------------------------
 	// store pin values for all shift register
 	digitalWrite(LOAD, LOW);
+
 	delayMicroseconds(PULSE_WIDTH_USEC); // TODO: here, insert some computation
+	display.click();
+
 	digitalWrite(LOAD, HIGH);
 
 	for (int pin = 0; pin < 24; ++pin) {
@@ -112,6 +137,34 @@ int readButtons() {
 		//-------------------------------------
 		digitalWrite(CLOCK, LOW);
 	}
+
+
+	// TODO: refactor this
+
+	int shiftA = digitalRead(SHIFT_A);
+	if (pinStates[SHIFT_A_BIT] != shiftA) {
+		pinStates[SHIFT_A_BIT] = shiftA;
+		debouncing[SHIFT_A_BIT] = !debouncing[SHIFT_A_BIT];
+		debounce[SHIFT_A_BIT] = 0;
+	} else if (debouncing[SHIFT_A_BIT]) {
+		if (debounce[SHIFT_A_BIT]++ == DEBOUNCE_TRIGGER) {
+			changed[nChanged++] = SHIFT_A_BIT;
+			debouncing[SHIFT_A_BIT] = false;
+		}
+	}
+
+	int shiftB = digitalRead(SHIFT_B);
+	if (pinStates[SHIFT_B_BIT] != shiftB) {
+		pinStates[SHIFT_B_BIT] = shiftB;
+		debouncing[SHIFT_B_BIT] = !debouncing[SHIFT_B_BIT];
+		debounce[SHIFT_B_BIT] = 0;
+	} else if (debouncing[SHIFT_B_BIT]) {
+		if (debounce[SHIFT_B_BIT]++ == DEBOUNCE_TRIGGER) {
+			changed[nChanged++] = SHIFT_B_BIT;
+			debouncing[SHIFT_B_BIT] = false;
+		}
+	}
+
 	return nChanged;
 }
 
@@ -122,14 +175,50 @@ void loop() {
 	int nChanged = readButtons();
 	if (nChanged) {
 		for (int i = 0; i < nChanged; ++i) {
-			if (pinStates[changed[i]]) {
-				int note = pinToPadMap[changed[i]] + 36;
-				MIDI.sendNoteOn(note, 120, 1);
-				display.displayNumber(pinToPadMap[changed[i]], 0, 0);
-			} else {
-				MIDI.sendNoteOff(pinToPadMap[changed[i]] + 36, 0, 1);
+			if (changed[i] < 24) {
+				// pad
+				int note = 12 + selectedOctave * 24 + pinToPadMap[changed[i]];
+				if (pinStates[changed[i]]) {
+					MIDI.sendNoteOn(note, 120, 1);
+					// display.displayNote(note);
+				} else {
+					MIDI.sendNoteOff(note, 0, 1);
+				}
+			// TODO: refactor the following
+			} else if (changed[i] == SHIFT_A_BIT) {
+				// shift A
+				if (!pinStates[SHIFT_A_BIT]) {
+					if (++selectedOctave > 3) selectedOctave = 0;
+					// display.displayString("SA");
+					display.displayNumber(selectedOctave, 0, 0);
+				}
+			} else if (changed[i] == SHIFT_B_BIT) {
+				// shift B
+				if (!pinStates[SHIFT_B_BIT]) {
+					if (--selectedOctave < 0) selectedOctave = 3;
+					// display.displayString("SB");
+					display.displayNumber(selectedOctave, 0, 0);
+				}
 			}
 		}
 	}
+
+	// foot controler
+
+	/*if (--footTimer == 0) {
+		// only one read every 50 cycles for stability
+		footControlRead = analogRead(A0);
+		footTimer = ANALOG_READ_RATE;
+		if (abs(footControlRead - footControlValue) > 60) {
+			footControlValue = footControlRead;
+			long c = (footControlRead - 10) * 128 / 990;
+			if (c < 0) c = 0;
+			else if (c > 127) c = 127;
+			byte cc = (byte) c;
+			MIDI.sendControlChange(24, cc, 1);
+		}
+	}*/
 }
+
+
 

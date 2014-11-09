@@ -1,5 +1,6 @@
 #include "MIDI.h"
 #include "DualDigitDisplay.h"
+#include "Pad.h"
 
 #define PULSE_WIDTH_USEC 5
 #define ANALOG_READ_RATE 50
@@ -22,10 +23,11 @@ int   pinStates[26];  // state values of all 24 button pins
 int   changed[26];    // a list of button with changed state in the current loop
 int   debounce[26];   // debounce counter values of all 24 pins
 bool  debouncing[26]; // pins currently in debounce mode
+Pad   pads[24];
 
-long  footControlRead;    // analog read value of connected foot controller
-long  footControlValue;   // analog current value of connected foot controller
-int   footTimer;
+// long  footControlRead;    // analog read value of connected foot controller
+// long  footControlValue;   // analog current value of connected foot controller
+// int   footTimer;
 
 int   selectedOctave;
 
@@ -35,6 +37,14 @@ const int pinToPadMap[24] = {
 	2, 14, 23, 3, 15, 19, 6, 10, 22, 7, 11, 18,
 	0, 13, 17, 1, 12, 21, 4,  9, 16, 5,  8, 20
 };
+
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+void setupPads(int octave) {
+	for (int i = 0; i < 24; ++i) {
+		int note = 12 + octave * 24 + i;
+		pads[i].setNote(note);
+	}
+}
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
@@ -54,11 +64,12 @@ void setup() {
 		debouncing[i] = false;
 	}
 
-	footControlRead = 0;
-	footControlValue = 0;
-	footTimer = ANALOG_READ_RATE;
+	// footControlRead = 0;
+	// footControlValue = 0;
+	// footTimer = ANALOG_READ_RATE;
 
 	selectedOctave = 1;
+	setupPads(selectedOctave);
 
 	display.setup();
 	MIDI.begin();
@@ -177,13 +188,14 @@ void loop() {
 		for (int i = 0; i < nChanged; ++i) {
 			if (changed[i] < 24) {
 				// pad
-				int note = 12 + selectedOctave * 24 + pinToPadMap[changed[i]];
+				pads[pinToPadMap[changed[i]]].trigger(pinStates[changed[i]]);
+				/*int note = 12 + selectedOctave * 24 + pinToPadMap[changed[i]];
 				if (pinStates[changed[i]]) {
 					MIDI.sendNoteOn(note, 120, 1);
 					// display.displayNote(note);
 				} else {
 					MIDI.sendNoteOff(note, 0, 1);
-				}
+				}*/
 			// TODO: refactor the following
 			} else if (changed[i] == SHIFT_A_BIT) {
 				// shift A
@@ -191,6 +203,7 @@ void loop() {
 					if (++selectedOctave > 3) selectedOctave = 0;
 					// display.displayString("SA");
 					display.displayNumber(selectedOctave, 0, 0);
+					setupPads(selectedOctave);
 				}
 			} else if (changed[i] == SHIFT_B_BIT) {
 				// shift B
@@ -198,6 +211,7 @@ void loop() {
 					if (--selectedOctave < 0) selectedOctave = 3;
 					// display.displayString("SB");
 					display.displayNumber(selectedOctave, 0, 0);
+					setupPads(selectedOctave);
 				}
 			}
 		}

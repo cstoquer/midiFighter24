@@ -173,21 +173,6 @@ int readButtons() {
 
 void loop() {
 	int nChanged = readButtons();
-	if (nChanged) {
-		for (int i = 0; i < nChanged; ++i) {
-			if (changed[i] < 24) {
-				// pad
-				program.triggerPad(pinToPadMap[changed[i]], pinStates[changed[i]]);
-			// TODO: refactor the following
-			} else if (changed[i] == SHIFT_A_BIT) {
-				// shift A, down edge
-				if (!pinStates[SHIFT_A_BIT]) program.shiftUp();
-			} else if (changed[i] == SHIFT_B_BIT) {
-				// shift B, down edge
-				if (!pinStates[SHIFT_B_BIT]) program.shiftDown();
-			}
-		}
-	}
 
 	// foot controler
 
@@ -204,6 +189,20 @@ void loop() {
 			MIDI.sendControlChange(24, cc, 1);
 		}
 	}*/
+
+	if (nChanged == 0) return;
+
+	for (int i = 0; i < nChanged; ++i) {
+		if (changed[i] < 24) {
+			program.triggerPad(pinToPadMap[changed[i]], pinStates[changed[i]]);
+		} else if (changed[i] == SHIFT_A_BIT) {
+			// shift A, down edge
+			if (!pinStates[SHIFT_A_BIT]) program.shiftUp();
+		} else if (changed[i] == SHIFT_B_BIT) {
+			// shift B, down edge
+			if (!pinStates[SHIFT_B_BIT]) program.shiftDown();
+		}
+	}
 }
 
 

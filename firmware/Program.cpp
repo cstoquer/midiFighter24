@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "Arduino.h"
 #include "Program.h"
+#include "scales.h"
 
 
 Program::Program() {
@@ -45,5 +46,6 @@ void Program::shiftDown() {
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
 void Program::shiftUpDown() {
+	// both shiftUp and shiftDown pressed together
 	// TODO
 };

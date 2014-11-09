@@ -21,9 +21,10 @@ void Program::init(DualDigitDisplay* d) {
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
 void Program::setupPads(int octave) {
+	int note = 12 + octave * 24;
 	for (int i = 0; i < 24; ++i) {
-		int note = 12 + octave * 24 + i;
 		pads[i].setNote(note);
+		note += 1;
 	}
 };
 

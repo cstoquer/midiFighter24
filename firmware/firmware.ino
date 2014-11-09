@@ -189,13 +189,6 @@ void loop() {
 			if (changed[i] < 24) {
 				// pad
 				pads[pinToPadMap[changed[i]]].trigger(pinStates[changed[i]]);
-				/*int note = 12 + selectedOctave * 24 + pinToPadMap[changed[i]];
-				if (pinStates[changed[i]]) {
-					MIDI.sendNoteOn(note, 120, 1);
-					// display.displayNote(note);
-				} else {
-					MIDI.sendNoteOff(note, 0, 1);
-				}*/
 			// TODO: refactor the following
 			} else if (changed[i] == SHIFT_A_BIT) {
 				// shift A

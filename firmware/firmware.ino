@@ -28,8 +28,6 @@ bool  debouncing[26]; // pins currently in debounce mode
 // long  footControlValue;   // analog current value of connected foot controller
 // int   footTimer;
 
-int   selectedOctave;
-
 DualDigitDisplay display;
 Program          program;
 
@@ -61,10 +59,8 @@ void setup() {
 	// footControlValue = 0;
 	// footTimer = ANALOG_READ_RATE;
 
-	selectedOctave = 1;
-	program.init();
-
 	display.setup();
+	program.init(&display);
 	MIDI.begin();
 
 	display.clear();
@@ -185,20 +181,10 @@ void loop() {
 			// TODO: refactor the following
 			} else if (changed[i] == SHIFT_A_BIT) {
 				// shift A, down edge
-				if (!pinStates[SHIFT_A_BIT]) {
-					if (++selectedOctave > 3) selectedOctave = 0;
-					// display.displayString("SA");
-					display.displayNumber(selectedOctave, 0, 0);
-					program.setupPads(selectedOctave);
-				}
+				if (!pinStates[SHIFT_A_BIT]) program.shiftUp();
 			} else if (changed[i] == SHIFT_B_BIT) {
 				// shift B, down edge
-				if (!pinStates[SHIFT_B_BIT]) {
-					if (--selectedOctave < 0) selectedOctave = 3;
-					// display.displayString("SB");
-					display.displayNumber(selectedOctave, 0, 0);
-					program.setupPads(selectedOctave);
-				}
+				if (!pinStates[SHIFT_B_BIT]) program.shiftDown();
 			}
 		}
 	}

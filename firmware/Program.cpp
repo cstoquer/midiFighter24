@@ -20,12 +20,30 @@ void Program::init(DualDigitDisplay* d) {
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
+void setupPadFromScale(Pad* pads, int octave, int key, const byte* scale, int scaleSize) {
+	int root = octave * 12 + key;
+	int note = root;
+	byte index = 0;
+	for (int i = 0; i < 24; ++i) {
+		pads[i].setNote(note);
+		if (index < scaleSize) note += scale[index];
+		if (++index > scaleSize) {
+			root += 12;
+			note = root;
+			index = 0;
+		}
+	}
+};
+
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
 void Program::setupPads(int octave) {
-	int note = 12 + octave * 24;
+	/*int note = octave * 24 + 12;
 	for (int i = 0; i < 24; ++i) {
 		pads[i].setNote(note);
 		note += 1;
-	}
+	}*/
+	setupPadFromScale(pads, octave, 12, scale_major, 6);
 };
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄

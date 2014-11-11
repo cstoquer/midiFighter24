@@ -11,7 +11,7 @@ const byte SHARP[12]   = {0, DOT, 0, DOT, 0, 0, DOT, 0, DOT, 0, DOT, 0};
 
 DualDigitDisplay::DualDigitDisplay() {
 	timer = BLINK_DURATION;
-	blink = true;
+	blink = false;
 }
 
 

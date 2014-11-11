@@ -196,9 +196,19 @@ void loop() {
 		if (changed[i] < 24) {
 			program.triggerPad(pinToPadMap[changed[i]], pinStates[changed[i]]);
 		} else if (changed[i] == SHIFT_A_BIT) {
+			// shift A + shift B
+			if (pinStates[SHIFT_A_BIT] && pinStates[SHIFT_B_BIT]) {
+				display.displayString("MN");
+				return;
+			}
 			// shift A, down edge
 			if (!pinStates[SHIFT_A_BIT]) program.shiftUp();
 		} else if (changed[i] == SHIFT_B_BIT) {
+			// shift B + shift A
+			if (pinStates[SHIFT_A_BIT] && pinStates[SHIFT_B_BIT]) {
+				display.displayString("MN");
+				return;
+			}
 			// shift B, down edge
 			if (!pinStates[SHIFT_B_BIT]) program.shiftDown();
 		}

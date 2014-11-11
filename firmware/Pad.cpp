@@ -6,7 +6,7 @@
 
 Pad::Pad() {
 	note  = 0;
-	state = 0;
+	state = -1;
 }
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -23,5 +23,6 @@ void Pad::trigger(bool value) {
 		state = note;
 	} else {
 		MIDI.sendNoteOff(state, 0, 1);
+		state = -1;
 	}
 };

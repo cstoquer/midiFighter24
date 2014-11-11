@@ -66,10 +66,10 @@ void Program::shiftDown() {
 
 void Program::enterMenu() {
 	display->displayString("MN");
-	// TODO: cancel all pad notes
-	/*for (int i = 0; i < 24; ++i) {
+	// cancel all pad notes
+	for (int i = 0; i < 24; ++i) {
 		pads[i].trigger(0);
-	}*/
+	}
 };
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -81,6 +81,6 @@ void Program::enterMenu() {
 bool Program::menuButton(int button, int state) {
 	// TODO
 	if (button == 23 && !state) return true; // exit menu
-	if (!state) display->displayNumber(button);
+	if (button <= 22 && !state) display->displayNumber(button);
 	return false;
 };

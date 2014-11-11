@@ -21,7 +21,7 @@ void Pad::trigger(bool value) {
 	if (value) {
 		MIDI.sendNoteOn(note, 120, 1);
 		state = note;
-	} else {
+	} else if (state >= 0) {
 		MIDI.sendNoteOff(state, 0, 1);
 		state = -1;
 	}

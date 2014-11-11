@@ -224,7 +224,11 @@ void menuLoop() {
 		int nChanged = readButtons();
 		if (nChanged == 0) continue;
 		for (int i = 0; i < nChanged; ++i) {
-			if (program.menuButton(pinToPadMap[changed[i]], pinStates[changed[i]])) return;
+			if (program.menuButton(pinToPadMap[changed[i]], pinStates[changed[i]])) {
+				// exit menu
+				display.clear();
+				return;
+			}
 		}
 	}
 }

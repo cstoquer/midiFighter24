@@ -5,9 +5,10 @@
 class Pad {
 private:
 	int  note;
-	int  state;
 
 public:
+	int  state;
+
 	Pad();
 	void setNote(int);
 	void trigger(bool);

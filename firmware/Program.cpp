@@ -81,6 +81,6 @@ void Program::enterMenu() {
 bool Program::menuButton(int button, int state) {
 	// TODO
 	if (button == 23 && !state) return true; // exit menu
-	if (button <= 22 && !state) display->displayNumber(button);
+	if (button <= 22 && state) display->displayNumber(button);
 	return false;
 };

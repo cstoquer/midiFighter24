@@ -48,6 +48,14 @@ void DualDigitDisplay::displayNumber(int number, int decimal, int quote) {
 	);
 };
 
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
+void DualDigitDisplay::displayNumber(int number) {
+	display(
+		NUMBERS[(number % 100) / 10],
+		NUMBERS[number % 10]
+	);
+};
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 

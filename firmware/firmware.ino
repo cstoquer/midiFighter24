@@ -31,9 +31,10 @@ bool  debouncing[26]; // pins currently in debounce mode
 DualDigitDisplay display;
 Program          program;
 
-const int pinToPadMap[24] = {
+const int pinToPadMap[26] = {
 	2, 14, 23, 3, 15, 19, 6, 10, 22, 7, 11, 18,
-	0, 13, 17, 1, 12, 21, 4,  9, 16, 5,  8, 20
+	0, 13, 17, 1, 12, 21, 4,  9, 16, 5,  8, 20,
+	24, 25 // shift buttons
 };
 
 
@@ -198,7 +199,7 @@ void loop() {
 		} else if (changed[i] == SHIFT_A_BIT) {
 			// shift A + shift B
 			if (pinStates[SHIFT_A_BIT] && pinStates[SHIFT_B_BIT]) {
-				display.displayString("MN");
+				menuLoop();
 				return;
 			}
 			// shift A, down edge
@@ -206,7 +207,7 @@ void loop() {
 		} else if (changed[i] == SHIFT_B_BIT) {
 			// shift B + shift A
 			if (pinStates[SHIFT_A_BIT] && pinStates[SHIFT_B_BIT]) {
-				display.displayString("MN");
+				menuLoop();
 				return;
 			}
 			// shift B, down edge
@@ -215,5 +216,15 @@ void loop() {
 	}
 }
 
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
-
+void menuLoop() {
+	program.enterMenu();
+	while (true) {
+		int nChanged = readButtons();
+		if (nChanged == 0) continue;
+		for (int i = 0; i < nChanged; ++i) {
+			if (program.menuButton(pinToPadMap[changed[i]], pinStates[changed[i]])) return;
+		}
+	}
+}

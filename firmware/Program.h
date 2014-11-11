@@ -19,7 +19,8 @@ public:
 	void setupPads(int);
 	void shiftUp();
 	void shiftDown();
-	void shiftUpDown();
+	void enterMenu();
+	bool menuButton(int, int);
 
 	//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 	inline void triggerPad(int pad, int state) {

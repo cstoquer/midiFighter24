@@ -20,6 +20,7 @@ public:
 	DualDigitDisplay();
 	void setup();
 	void display(int digitA, int digitB);
+	void displayNumber(int number);
 	void displayNumber(int number, int decimal, int quote);
 	void displayNote(int noteNumber);
 	void displayString(char* letters);

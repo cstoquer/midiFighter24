@@ -1,6 +1,7 @@
 #include "MIDI.h"
 #include "DualDigitDisplay.h"
 #include "Program.h"
+#include "scales.h"
 
 #define PULSE_WIDTH_USEC 5
 #define ANALOG_READ_RATE 50
@@ -225,14 +226,56 @@ void mainMenu() {
 		int nChanged = readButtons();
 		if (nChanged == 0) continue;
 		for (int i = 0; i < nChanged; ++i) {
+			// int state = pinStates[changed[i]];
+			if (pinStates[changed[i]]) continue; // down edge only
 			int button = pinToPadMap[changed[i]];
-			int state = pinStates[changed[i]];
-
-			if (button == 23 && !state) {
-				display.clear();
-				return; // exit menu
+			switch (button) {
+				case 20: scaleMenu(); break;
+				case 23: display.displayString("GO"); return; // exit menu
 			}
-			if (button <= 22 && state) display->displayNumber(button);
+		}
+	}
+}
+
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
+void scaleMenu() {
+	display.displayString("SC");
+	while (true) {
+		int nChanged = readButtons();
+		if (nChanged == 0) continue;
+		for (int i = 0; i < nChanged; ++i) {
+			// int state = pinStates[changed[i]];
+			if (pinStates[changed[i]]) continue; // down edge only
+			int button = pinToPadMap[changed[i]];
+			switch (button) {
+				case 0: display.displayString("MA"); program.setScaleMode(scale_major, 6); return;
+				case 1: display.displayString("HI"); program.setScaleMode(scale_harmonicMinor, 6); return;
+				case 2: display.displayString("MM"); program.setScaleMode(scale_melodicMinor, 6); return;
+				case 3: display.displayString("WT"); program.setScaleMode(scale_wholeTone, 5); return;
+				case 4: display.displayString("DI"); program.setScaleMode(scale_diminished, 7); return;
+				case 5: display.displayString("PA"); program.setScaleMode(scale_majorPentatonic, 4); return;
+				case 6: display.displayString("PI"); program.setScaleMode(scale_minorPentatonic, 4); return;
+				case 7: display.displayString("JP"); program.setScaleMode(scale_japInSen, 4); return;
+				case 8: display.displayString("BM"); program.setScaleMode(scale_majorBebop, 7); return;
+				case 9: display.displayString("BD"); program.setScaleMode(scale_dominantBebop, 7); return;
+				case 10: display.displayString("BL"); program.setScaleMode(scale_blues, 5); return;
+				case 11: display.displayString("AR"); program.setScaleMode(scale_arabic, 6); return;
+				case 12: display.displayString("EN"); program.setScaleMode(scale_enigmatic, 6); return;
+				case 13: display.displayString("NE"); program.setScaleMode(scale_neapolitan, 6); return;
+				case 14: display.displayString("NI"); program.setScaleMode(scale_neapolitanMinor, 6); return;
+				case 15: display.displayString("HU"); program.setScaleMode(scale_hungarianMinor, 6); return;
+				case 16: display.displayString("DO"); program.setScaleMode(scale_dorian, 6); return;
+				case 17: display.displayString("PH"); program.setScaleMode(scale_phrygian, 6); return;
+				case 18: display.displayString("LY"); program.setScaleMode(scale_lydian, 6); return;
+				case 19: display.displayString("MI"); program.setScaleMode(scale_mixolidian, 6); return;
+				case 20: display.displayString("AE"); program.setScaleMode(scale_aeolidian, 6); return;
+				case 21: display.displayString("LO"); program.setScaleMode(scale_locrian, 6); return;
+				case 22: display.displayString("CR"); program.setChromaticMode(12); return;
+				case 23: display.displayString("MP"); program.setChromaticMode(24); return;
+				case 24: /*shift A*/
+				case 25: /*shift B*/ return;
+			}
 		}
 	}
 }

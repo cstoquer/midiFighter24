@@ -199,7 +199,7 @@ void loop() {
 		} else if (changed[i] == SHIFT_A_BIT) {
 			// shift A + shift B
 			if (pinStates[SHIFT_A_BIT] && pinStates[SHIFT_B_BIT]) {
-				menuLoop();
+				mainMenu();
 				return;
 			}
 			// shift A, down edge
@@ -207,7 +207,7 @@ void loop() {
 		} else if (changed[i] == SHIFT_B_BIT) {
 			// shift B + shift A
 			if (pinStates[SHIFT_A_BIT] && pinStates[SHIFT_B_BIT]) {
-				menuLoop();
+				mainMenu();
 				return;
 			}
 			// shift B, down edge
@@ -218,17 +218,21 @@ void loop() {
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
-void menuLoop() {
-	program.enterMenu();
+void mainMenu() {
+	display.displayString("MN");
+	program.allPadOff();
 	while (true) {
 		int nChanged = readButtons();
 		if (nChanged == 0) continue;
 		for (int i = 0; i < nChanged; ++i) {
-			if (program.menuButton(pinToPadMap[changed[i]], pinStates[changed[i]])) {
-				// exit menu
+			int button = pinToPadMap[changed[i]];
+			int state = pinStates[changed[i]];
+
+			if (button == 23 && !state) {
 				display.clear();
-				return;
+				return; // exit menu
 			}
+			if (button <= 22 && state) display->displayNumber(button);
 		}
 	}
 }

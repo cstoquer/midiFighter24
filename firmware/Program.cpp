@@ -64,23 +64,10 @@ void Program::shiftDown() {
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
-void Program::enterMenu() {
-	display->displayString("MN");
+void Program::allPadOff() {
 	// cancel all pad notes
 	for (int i = 0; i < 24; ++i) {
 		pads[i].trigger(0);
 	}
 };
 
-//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-/** A button state changed in menu mode
- *
- * @param {int} button - button number. [0..23] pad, [24..26] shift
- * @param {int} state  - button state
- */
-bool Program::menuButton(int button, int state) {
-	// TODO
-	if (button == 23 && !state) return true; // exit menu
-	if (button <= 22 && state) display->displayNumber(button);
-	return false;
-};

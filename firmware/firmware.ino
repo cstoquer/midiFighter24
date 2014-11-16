@@ -231,6 +231,8 @@ void mainMenu() {
 			int button = pinToPadMap[changed[i]];
 			switch (button) {
 				case 20: scaleMenu(); break;
+				case 21: rootNoteMenu(); break;
+				case 22: rootPadMenu(); break;
 				case 23: display.displayString("GO"); return; // exit menu
 			}
 		}
@@ -275,6 +277,46 @@ void scaleMenu() {
 				case 23: display.displayString("MP"); program.setChromaticMode(24); return;
 				case 24: /*shift A*/
 				case 25: /*shift B*/ return;
+			}
+		}
+	}
+}
+
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
+void rootNoteMenu() {
+	display.displayString("RN");
+	while (true) {
+		int nChanged = readButtons();
+		if (nChanged == 0) continue;
+		for (int i = 0; i < nChanged; ++i) {
+			// int state = pinStates[changed[i]];
+			if (pinStates[changed[i]]) continue; // down edge only
+			int button = pinToPadMap[changed[i]];
+			if (button < 12) {
+				display.displayNote(button);
+				program.setRootNote(button);
+				return;
+			}
+		}
+	}
+}
+
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
+void rootPadMenu() {
+	display.displayString("RP");
+	while (true) {
+		int nChanged = readButtons();
+		if (nChanged == 0) continue;
+		for (int i = 0; i < nChanged; ++i) {
+			// int state = pinStates[changed[i]];
+			if (pinStates[changed[i]]) continue; // down edge only
+			int button = pinToPadMap[changed[i]];
+			if (button < 24) {
+				display.displayNumber(button);
+				program.setRootPad(button);
+				return;
 			}
 		}
 	}

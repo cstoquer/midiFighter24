@@ -26,8 +26,8 @@ void Program::init(DualDigitDisplay* d) {
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
-void setupPadFromScale(Pad* pads, int octave, const byte* scale, int scaleSize) {
-	int root = octave * 12 + initNote;
+void Program::setupPadFromScale() {
+	int root = currentOctave * 12 + initNote;
 	int note = root;
 	byte index = initIndex;
 	for (int i = 0; i < 24; ++i) {
@@ -45,7 +45,7 @@ void setupPadFromScale(Pad* pads, int octave, const byte* scale, int scaleSize) 
 
 void Program::setupPads() {
 	if (scale != NULL) {
-		setupPadFromScale(pads, currentOctave, scale, scaleSize);
+		setupPadFromScale();
 		return;
 	}
 	int note = currentOctave * octaveSize;
@@ -68,7 +68,7 @@ void Program::prepare() {
 
 	initIndex = s - (rootPad % s);
 	initNote  = (scaleValues[initIndex] + rootNote) % 12;
-	maxOctave = (127 - initNote - 24 % s) / 12 - (24 / s);
+	maxOctave = (127 - initNote - (24 % s)) / 12 - (24 / s);
 
 	if (currentOctave > maxOctave) currentOctave = maxOctave;
 
@@ -94,7 +94,7 @@ void Program::setRootNote(int r) {
 void Program::setScaleMode(const byte* _scale, int _scaleSize) {
 	scale = _scale;
 	scaleSize = _scaleSize;
-	setupPads();
+	prepare();
 };
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄

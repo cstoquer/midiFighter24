@@ -19,6 +19,9 @@ private:
 	int scaleSize;
 	DualDigitDisplay *display;
 
+	void setupPadFromScale();
+	void prepare();
+
 public:
 	Program();
 	void init(DualDigitDisplay*);

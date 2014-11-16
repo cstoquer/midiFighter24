@@ -8,9 +8,13 @@
 class Program {
 private:
 	Pad pads[24];
+	int rootPad;
+	int rootNote;
+	int initIndex;
+	int initNote;
 	int octaveSize;
 	int currentOctave;
-	int nOctaves;
+	int maxOctave;
 	byte const *scale;
 	int scaleSize;
 	DualDigitDisplay *display;
@@ -23,6 +27,8 @@ public:
 	void shiftDown();
 	void allPadOff();
 
+	void setRootPad(int);
+	void setRootNote(int);
 	void setScaleMode(const byte*, int);
 	void setChromaticMode(int);
 

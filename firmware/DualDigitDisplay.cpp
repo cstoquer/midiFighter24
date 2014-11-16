@@ -53,8 +53,10 @@ void DualDigitDisplay::displayNumber(int number, int decimal, int quote) {
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
 void DualDigitDisplay::displayNumber(int number) {
+	int firstDigit = (number % 100) / 10;
+	if (firstDigit != 0) firstDigit = NUMBERS[firstDigit];
 	display(
-		NUMBERS[(number % 100) / 10],
+		firstDigit,
 		NUMBERS[number % 10]
 	);
 };

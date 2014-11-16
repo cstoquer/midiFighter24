@@ -111,7 +111,7 @@ void Program::setChromaticMode(int _octaveSize) {
 void Program::shiftUp() {
 	if (++currentOctave >= maxOctave) currentOctave = 0;
 	setupPads();
-	display->displayNumber(currentOctave, 0, 0);
+	display->displayNumber(currentOctave);
 };
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -119,7 +119,7 @@ void Program::shiftUp() {
 void Program::shiftDown() {
 	if (--currentOctave < 0) currentOctave = maxOctave - 1;
 	setupPads();
-	display->displayNumber(currentOctave, 0, 0);
+	display->displayNumber(currentOctave);
 };
 
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄

@@ -121,9 +121,8 @@ Program.prototype.setupPads = function () {
 };
 
 Program.prototype.setupPadFromScale = function () {
-	this.scaleSize = this.scale.length;
-	var root = this.currentOctave * 12 + this.initNote;
-	var note = root;
+	var root = this.currentOctave * 12 + this.rootNote;
+	var note = this.currentOctave * 12 + this.initNote;
 	var index = this.initIndex;
 	for (var i = 0; i < 24; ++i) {
 		this.pads[i].setNote(note);
@@ -138,19 +137,24 @@ Program.prototype.setupPadFromScale = function () {
 
 Program.prototype.prepare = function () {
 	this.scaleSize = this.scale.length;
+
+	this.rootNote = this.rootNote % 12;
 	var scaleValues = [];
 	scaleValues[0] = 0;
 	for (var i = 0; i < this.scaleSize; ++i) {
 		scaleValues[i + 1] = scaleValues[i] + this.scale[i];
 	}
 
-	var s = this.scaleSize;
+	var s = this.scaleSize + 1;
 
-	this.initIndex = s - (this.rootPad % s);
+	this.initIndex = (s - (this.rootPad % s)) % s;
 	this.initNote  = (scaleValues[this.initIndex] + this.rootNote) % 12;
 	this.maxOctave = (127 - this.initNote - (24 % s)) / 12 - (24 / s);
 
 	if (this.currentOctave > this.maxOctave) this.currentOctave = this.maxOctave;
+
+	console.log(scaleValues)
+	console.log(this.scale)
 	console.log(this.initIndex, this.initNote)
 
 	this.setupPads();
@@ -172,7 +176,8 @@ for (var x = 0; x < 4; ++x) {
 
 program.scale = SCALES.major;
 program.rootNote = 0;
-program.rootPad  = 0;
+program.rootPad  = 21;
+program.currentOctave = 2;
 
 program.prepare();
 

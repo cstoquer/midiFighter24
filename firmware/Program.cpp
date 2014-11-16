@@ -27,8 +27,8 @@ void Program::init(DualDigitDisplay* d) {
 //▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
 void Program::setupPadFromScale() {
-	int root = currentOctave * 12 + initNote;
-	int note = root;
+	int root = currentOctave * 12 + rootNote;
+	int note = currentOctave * 12 + initNote;
 	byte index = initIndex;
 	for (int i = 0; i < 24; ++i) {
 		pads[i].setNote(note);
@@ -66,7 +66,7 @@ void Program::prepare() {
 
 	int s = scaleSize + 1;
 
-	initIndex = s - (rootPad % s);
+	initIndex = (s - (rootPad % s)) % s;
 	initNote  = (scaleValues[initIndex] + rootNote) % 12;
 	maxOctave = (127 - initNote - (24 % s)) / 12 - (24 / s);
 

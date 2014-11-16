@@ -2,6 +2,7 @@
 #include "DualDigitDisplay.h"
 #include "Program.h"
 #include "scales.h"
+#include "global.h"
 
 #define PULSE_WIDTH_USEC 5
 #define ANALOG_READ_RATE 50
@@ -64,6 +65,7 @@ void setup() {
 	display.setup();
 	program.init(&display);
 	MIDI.begin();
+	mainMidiChannel = 4;
 
 	display.clear();
 }
@@ -230,6 +232,7 @@ void mainMenu() {
 			if (pinStates[changed[i]]) continue; // down edge only
 			int button = pinToPadMap[changed[i]];
 			switch (button) {
+				case 16: channelMenu(); break;
 				case 20: scaleMenu(); break;
 				case 21: rootNoteMenu(); break;
 				case 22: rootPadMenu(); break;
@@ -316,6 +319,26 @@ void rootPadMenu() {
 			if (button < 24) {
 				display.displayNumber(button);
 				program.setRootPad(button);
+				return;
+			}
+		}
+	}
+}
+
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
+void channelMenu() {
+	display.displayString("CH");
+	while (true) {
+		int nChanged = readButtons();
+		if (nChanged == 0) continue;
+		for (int i = 0; i < nChanged; ++i) {
+			// int state = pinStates[changed[i]];
+			if (pinStates[changed[i]]) continue; // down edge only
+			int button = pinToPadMap[changed[i]];
+			if (button < 16) {
+				mainMidiChannel = button + 1;
+				display.displayNumber(button + 1);
 				return;
 			}
 		}

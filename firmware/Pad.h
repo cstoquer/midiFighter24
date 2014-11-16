@@ -1,6 +1,8 @@
 #ifndef PAD__H
 #define PAD__H
 
+#include "global.h"
+
 
 class Pad {
 private:

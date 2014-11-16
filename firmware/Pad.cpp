@@ -19,10 +19,10 @@ void Pad::setNote(int n) {
 
 void Pad::trigger(bool value) {
 	if (value) {
-		MIDI.sendNoteOn(note, 120, 1);
+		MIDI.sendNoteOn(note, 120, mainMidiChannel);
 		state = note;
 	} else if (state >= 0) {
-		MIDI.sendNoteOff(state, 0, 1);
+		MIDI.sendNoteOff(state, 0, mainMidiChannel);
 		state = -1;
 	}
 };

@@ -86,35 +86,41 @@ int readButtons() {
 	for (int pin = 0; pin < 24; ++pin) {
 		//-------------------------------------
 		// read shift registers values
-		int value1 = digitalRead(READ1);
-		int value2 = digitalRead(READ2);
-		int value3 = digitalRead(READ3);
+		int values[3];
+
+		values[0] = digitalRead(READ1);
+		values[1] = digitalRead(READ2);
+		values[2] = digitalRead(READ3);
+
 		digitalWrite(CLOCK, HIGH);
 		// delayMicroseconds(PULSE_WIDTH_USEC);
 
-		//-------------------------------------
-		// update and debounce value 1
-		if (pinStates[pin] != value1) {
-			// pin changed value
-			pinStates[pin] = value1;
-			// switch debouncing
-			// - if previously bebouncing, then it was an artefact
-			// - if not, then debouncing start
-			debouncing[pin] = !debouncing[pin];
-			// initiate debounce counter for this pin
-			debounce[pin] = 0;
-		} else if (debouncing[pin]) {
-			// increment debouncing counter value for this pin
-			if (debounce[pin]++ == DEBOUNCE_TRIGGER) {
-				// debounce is finished, button state has changed
-				changed[nChanged++] = pin;
-				debouncing[pin] = false;
+		for (int i = 0; i < 3; ++i) {
+			int value = values[i];
+			//-------------------------------------
+			// update and debounce value 1
+			if (pinStates[pin] != value) {
+				// pin changed value
+				pinStates[pin] = value;
+				// switch debouncing
+				// - if previously bebouncing, then it was an artefact
+				// - if not, then debouncing start
+				debouncing[pin] = !debouncing[pin];
+				// initiate debounce counter for this pin
+				debounce[pin] = 0;
+			} else if (debouncing[pin]) {
+				// increment debouncing counter value for this pin
+				if (debounce[pin]++ == DEBOUNCE_TRIGGER) {
+					// debounce is finished, button state has changed
+					changed[nChanged++] = pin;
+					debouncing[pin] = false;
+				}
 			}
 		}
 
 		//-------------------------------------
 		// update and debounce value 2
-		if (pinStates[++pin] != value2) {
+		/*if (pinStates[++pin] != value2) {
 			pinStates[pin] = value2;
 			debouncing[pin] = !debouncing[pin];
 			debounce[pin] = 0;
@@ -136,7 +142,7 @@ int readButtons() {
 				changed[nChanged++] = pin;
 				debouncing[pin] = false;
 			}
-		}
+		}*/
 
 		//-------------------------------------
 		digitalWrite(CLOCK, LOW);

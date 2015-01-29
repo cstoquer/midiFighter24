@@ -20,6 +20,8 @@ INSTRUCTIONS
 
 -Yoshi
 
+see http://arduino.cc/en/Hacking/DFUProgramming8U2 for how to update 8u2/16u2 firmware
+
 -------------------------------------
 original readme.txt from Arduino-Serial
 

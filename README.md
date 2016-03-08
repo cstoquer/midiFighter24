@@ -15,8 +15,8 @@ no schematic yet, sorry.
 
 ### In a nutshell
 
- - the 24 Arcade buttons are read by 3 `74HC165` parallel -> serial shift registers connected on Arduino's pin 2(LOAD), 3(CLOCK), and 4, 5, 6 (shift registers DATA) 
- - 2 x 7 led digit display are controlled by 2 `74HC595` serial -> parallel shift registers connected on Arduino's pin 9(LATCH), 8(CLOCK) and 10(DATA). These shift registers are set in series.
+ - the 24 Arcade buttons are read by 3 `74HC165` shift registers connected on Arduino's pin 2(LOAD), 3(CLOCK), and 4, 5, 6 (shift registers DATA) 
+ - 2 x 7 led digit display are controlled by 2 `74HC595` shift registers connected on Arduino's pin 9(LATCH), 8(CLOCK) and 10(DATA). These shift registers are set in series.
  - two menu button on the side are connected to Arduino's pin 11 and 12 (with a pullup resistor)
 
 ### Photos

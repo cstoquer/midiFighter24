@@ -11,6 +11,10 @@ see it in action [here](https://www.youtube.com/watch?v=FosVgqp6nJg)
 Install DualMocoLUFA on the Arduino 8U2's chip
 (look inside the `dualMocoLUFA` folder in this repository to find code and instructions)
 
+dualMocoLUFA Project is Copyright (C) 2013 by morecat_lab
+http://morecatlab.akiba.coocan.jp/
+
+
 # Schematics
 
 ## In a nutshell
@@ -22,7 +26,7 @@ Install DualMocoLUFA on the Arduino 8U2's chip
 ## Buttons module
 Push buttons are connected to the arduino by using `74HC165` shift registers.
 
-Here the schematic of one module for 8 buttons. I used 2 5x1 headers for the connection to the buttons. In the schematic, this is the labels `A`, `B`, `C`, `D` and `E`, `F`, `G`, `H`. The last pin of each headers are connected to `VCC`. Pull-up resistors are 10KΩ.
+Here is the schematic of one module for 8 buttons. I used 2 5x1 headers for the connection to the buttons. In the schematic, this is the labels `A`, `B`, `C`, `D` and `E`, `F`, `G`, `H`. The last pin of each headers are connected to `VCC`. Pull-up resistors are 10KΩ.
 
 ![button1](https://cloud.githubusercontent.com/assets/2462139/19406542/e7c0f1be-92c2-11e6-920d-a341865de7c5.jpg)
 
@@ -45,7 +49,7 @@ And here are some photos of how I implemented this module using perf boards.
 This module is **optional**, and is for displaying information using 2 seven segments LED.
 It is using `74HC595` shift registers to control the 16 LED using 3 pins of the Arduino. 16 LED consume quite a lot of power for the Arduino, so in the code, I take care of turning ED off after a delay.
 
-If I had to put more LED, I would use a `MAX7219` LED matrix controller is this chip use way less power.
+If I had to put more LED, I would use a `MAX7219` LED matrix controller as this chip use way less power.
 
 This is the schematic for one `74HC595`. Resistors are 4.7KΩ.
 

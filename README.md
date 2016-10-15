@@ -2,6 +2,8 @@
 
 Firmware and tools for Arduino based 24 buttons midi controller
 
+![front](https://cloud.githubusercontent.com/assets/2462139/13602789/2c77cb92-e57c-11e5-8c30-129de1032203.JPG)
+
 see it in action [here](https://www.youtube.com/watch?v=FosVgqp6nJg)
 
 # Setup Arduino to send Midi via USB
@@ -81,8 +83,6 @@ Photos of how everything connects together:
 
 
 # More photos
-
-![front](https://cloud.githubusercontent.com/assets/2462139/13602789/2c77cb92-e57c-11e5-8c30-129de1032203.JPG)
 
 ![left](https://cloud.githubusercontent.com/assets/2462139/13602793/3979264c-e57c-11e5-9047-d57a520f9afd.JPG)
 

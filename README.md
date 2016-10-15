@@ -39,8 +39,8 @@ And here are some photos of how I implemented this module using perf boards.
 
 ![button module under](https://cloud.githubusercontent.com/assets/2462139/19406550/06a73f70-92c3-11e6-94d2-ddd80137cba9.JPG)
 
-## Display module
-This module is optional, and is for displaying information using 2 seven segments LED.
+## Display module (optional)
+This module is **optional**, and is for displaying information using 2 seven segments LED.
 It is using `74HC595` shift registers to control the 16 LED using 3 pins of the Arduino. 16 LED consume quite a lot of power for the Arduino, so in the code, I take care of turning ED off after a delay.
 
 If I had to put more LED, I would use a `MAX7219` LED matrix controller is this chip use way less power.
